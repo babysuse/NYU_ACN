@@ -81,11 +81,13 @@ def dnsquery_ll(query: str):
         server_addr = ('8.8.8.8', 53)
         sock.sendto(query_msg, server_addr)
         # dns.message.QueryMessage
-        resp_qmsg, _ = dns.query.receive_udp(sock, destination=server_addr)
-    parse_dns_qmsg(resp_qmsg)
+        # resp_qmsg, _ = dns.query.receive_udp(sock, destination=server_addr)
+        resp_msg, _ = sock.recvfrom(65535)
+    qmsg = dns.message.from_wire(resp_msg)
+    parse_dns_qmsg(qmsg)
 
 if __name__ == "__main__":
     query = input("Input domain: ")
     while not query:
         query = input("Input a non-empty domain: ")
-    dnsquery_hl(query)
+    dnsquery_ll(query)
